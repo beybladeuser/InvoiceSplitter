@@ -51,3 +51,25 @@ docker compose down
 ```
 
 This keeps the PostgreSQL data volume. To also delete the local database data, use `docker compose down -v`; this is destructive.
+
+## Run the without Docker
+
+This approach is only recommended for fast iteration and debugging, for proper testing and demoing pls refer to [Docker local deployment](#run-locally-with-docker-compose)
+
+### Frontend
+
+Install Node.js 22.12 or later, then run these commands from the repository root:
+
+```powershell
+Set-Location InvoiceSplitter.frontend
+npm ci
+npm run dev
+```
+
+Open the local URL printed by Vite, usually <http://localhost:5173>. This starts only the frontend development server.
+
+### Database
+
+There isn't any purpose on running the db locally and without docker so pls refer to [Running db in Docker](#start-the-database-and-apply-migrations)
+
+If you still insist on running the db without docker you're on your own figuring that out
