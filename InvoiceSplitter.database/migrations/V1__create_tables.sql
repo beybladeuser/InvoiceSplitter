@@ -1,5 +1,3 @@
-BEGIN;
-
 CREATE TABLE expense_groups (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL CHECK (btrim(name) <> ''),
@@ -63,4 +61,3 @@ CREATE TABLE item_participants (
 CREATE INDEX item_participants_member_idx
     ON item_participants (group_id, member_id);
 
-COMMIT;
