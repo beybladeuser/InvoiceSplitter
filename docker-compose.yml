@@ -6,3 +6,26 @@ services:
     ports:
       - "${FRONTEND_PORT:-8080}:8080"
     restart: unless-stopped
+
+  database:
+    build:
+      context: ./InvoiceSplitter.database
+      dockerfile: Dockerfile
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: invoicesplitter
+      POSTGRES_USER: invoicesplitter
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your .env file}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
