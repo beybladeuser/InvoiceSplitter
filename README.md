@@ -42,7 +42,7 @@ Flyway runs only the migrations that have not already been applied. Add future s
 docker compose up -d
 ```
 
-The frontend is available at <http://localhost:8080> by default, and Keycloak is available at <http://localhost:8081>. To use different host ports, change `FRONTEND_PORT` or `KEYCLOAK_PORT` in `.env`.
+The frontend is available at <http://localhost:8080>, the API at <http://localhost:8000>, and Keycloak at <http://localhost:8081> by default. To use different host ports, change `FRONTEND_PORT`, `API_PORT`, or `KEYCLOAK_PORT` in `.env`.
 
 Keycloak starts with the rest of the Compose services and uses its own persistent database volume. Configure `KEYCLOAK_HOSTNAME` in `.env` if you change its local address.
 
@@ -54,13 +54,40 @@ docker compose down
 
 This keeps the PostgreSQL data volume. To also delete the local database data, use `docker compose down -v`; this is destructive.
 
-## Run the without Docker
+## Run the app code without Docker
 
-This approach is only recommended for fast iteration and debugging, for proper testing and demoing pls refer to [Docker local deployment](#run-locally-with-docker-compose)
+This runs the React frontend and FastAPI API directly on your machine. PostgreSQL and Keycloak still run in Docker Compose; running those services natively is not covered here.
 
-### Frontend
+### Start PostgreSQL and Keycloak
 
-Install Node.js 22.12 or later, then run these commands from the repository root:
+If you have not created `.env` yet, copy the example and replace its placeholder passwords with strong values:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Start the supporting services and apply database migrations:
+
+```powershell
+docker compose up -d database keycloak-database keycloak
+docker compose --profile migrations run --rm flyway
+```
+
+### Run the API
+
+Install Python 3.14 and `uv`. In a new terminal from the repository root, run:
+
+```powershell
+Set-Location InvoiceSplitter.api
+uv sync --locked
+uv run fastapi dev src/invoicesplitter_api/main.py --host 0.0.0.0 --port 8000
+```
+
+The API is available at <http://localhost:8000>; its interactive docs are at <http://localhost:8000/docs>.
+
+### Run the frontend
+
+Install Node.js 22.12 or later. In another terminal from the repository root, run:
 
 ```powershell
 Set-Location InvoiceSplitter.frontend

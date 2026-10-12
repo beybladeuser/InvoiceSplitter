@@ -7,6 +7,17 @@ services:
       - "${FRONTEND_PORT:-8080}:8080"
     restart: unless-stopped
 
+  api:
+    build:
+      context: ./InvoiceSplitter.api
+      dockerfile: Dockerfile
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+
   database:
     build:
       context: ./InvoiceSplitter.database
