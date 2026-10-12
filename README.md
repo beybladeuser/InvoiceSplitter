@@ -44,6 +44,16 @@ docker compose up -d
 
 The frontend is available at <http://localhost:8080> by default. To use another host port, change `FRONTEND_PORT` in `.env`.
 
+### Run Keycloak (optional)
+
+Set the Keycloak database and bootstrap admin passwords in `.env`, then start the identity services:
+
+```powershell
+docker compose --profile identity up --build -d keycloak
+```
+
+Keycloak is available at <http://localhost:8081> by default. Configure `KEYCLOAK_HOSTNAME` and `KEYCLOAK_PORT` in `.env` to use a different local address. The Keycloak database uses its own persistent volume.
+
 ### Stop the services
 
 ```powershell
