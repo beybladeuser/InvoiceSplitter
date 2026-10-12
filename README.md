@@ -12,7 +12,7 @@ From the repository root, create a local `.env` file and set a strong database p
 Copy-Item .env.example .env
 ```
 
-Edit `.env` and replace the example `POSTGRES_PASSWORD` value. The `.env` file is ignored by Git.
+Edit `.env` and replace all example password values with strong passwords. The `.env` file is ignored by Git.
 
 ### Build the images
 
@@ -42,17 +42,9 @@ Flyway runs only the migrations that have not already been applied. Add future s
 docker compose up -d
 ```
 
-The frontend is available at <http://localhost:8080> by default. To use another host port, change `FRONTEND_PORT` in `.env`.
+The frontend is available at <http://localhost:8080> by default, and Keycloak is available at <http://localhost:8081>. To use different host ports, change `FRONTEND_PORT` or `KEYCLOAK_PORT` in `.env`.
 
-### Run Keycloak (optional)
-
-Set the Keycloak database and bootstrap admin passwords in `.env`, then start the identity services:
-
-```powershell
-docker compose --profile identity up --build -d keycloak
-```
-
-Keycloak is available at <http://localhost:8081> by default. Configure `KEYCLOAK_HOSTNAME` and `KEYCLOAK_PORT` in `.env` to use a different local address. The Keycloak database uses its own persistent volume.
+Keycloak starts with the rest of the Compose services and uses its own persistent database volume. Configure `KEYCLOAK_HOSTNAME` in `.env` if you change its local address.
 
 ### Stop the services
 
