@@ -80,7 +80,7 @@ Install Python 3.14 and `uv`. In a new terminal from the repository root, run:
 ```powershell
 Set-Location InvoiceSplitter.api
 uv sync --locked
-uv run fastapi dev src/invoicesplitter_api/main.py --host 0.0.0.0 --port 8000
+uv run fastapi dev src/main.py --host 0.0.0.0 --port 8000
 ```
 
 The API is available at <http://localhost:8000>; its interactive docs are at <http://localhost:8000/docs>.

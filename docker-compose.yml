@@ -11,6 +11,12 @@ services:
     build:
       context: ./InvoiceSplitter.api
       dockerfile: Dockerfile
+    environment:
+      DATABASE_HOST: database
+      DATABASE_PORT: "5432"
+      DATABASE_NAME: invoicesplitter
+      DATABASE_USER: invoicesplitter
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your .env file}
     ports:
       - "${API_PORT:-8000}:8000"
     depends_on:
