@@ -1,23 +1,30 @@
-from collections.abc import Generator
+from collections.abc import AsyncGenerator
 from functools import lru_cache
 
-from sqlalchemy import Engine, create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from db.settings import DatabaseSettings
 
 
 @lru_cache
-def get_engine() -> Engine:
+def get_engine() -> AsyncEngine:
     settings = DatabaseSettings()
-    return create_engine(settings.url, pool_pre_ping=True)
+    return create_async_engine(settings.url, pool_pre_ping=True)
 
 
 @lru_cache
-def get_session_factory() -> sessionmaker[Session]:
-    return sessionmaker(bind=get_engine(), expire_on_commit=False)
+def get_session_factory() -> async_sessionmaker[AsyncSession]:
+    return async_sessionmaker(bind=get_engine(), expire_on_commit=False)
 
 
-def get_db() -> Generator[Session, None, None]:
-    with get_session_factory()() as session:
+async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
+    async with get_session_factory()() as session:
         yield session
+
+
+get_db = get_db_session
