@@ -14,9 +14,9 @@ services:
     environment:
       DATABASE_HOST: database
       DATABASE_PORT: "5432"
-      DATABASE_NAME: invoicesplitter
-      DATABASE_USER: invoicesplitter
-      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your .env file}
+      DATABASE_NAME: ${DATABASE_NAME:?Set DATABASE_NAME in your .env file}
+      DATABASE_USER: ${DATABASE_USER:?Set DATABASE_USER in your .env file}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in your .env file}
     ports:
       - "${API_PORT:-8000}:8000"
     depends_on:
@@ -29,11 +29,11 @@ services:
       context: ./InvoiceSplitter.database
       dockerfile: Dockerfile
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${DATABASE_PORT:?Set DATABASE_PORT in your .env file}:5432"
     environment:
-      POSTGRES_DB: invoicesplitter
-      POSTGRES_USER: invoicesplitter
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your .env file}
+      POSTGRES_DB: ${DATABASE_NAME:?Set DATABASE_NAME in your .env file}
+      POSTGRES_USER: ${DATABASE_USER:?Set DATABASE_USER in your .env file}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in your .env file}
     volumes:
       - postgres_data:/var/lib/postgresql
     healthcheck:
@@ -48,9 +48,9 @@ services:
     image: flyway/flyway:11-alpine
     command: ["migrate"]
     environment:
-      FLYWAY_URL: jdbc:postgresql://database:5432/invoicesplitter
-      FLYWAY_USER: invoicesplitter
-      FLYWAY_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your .env file}
+      FLYWAY_URL: jdbc:postgresql://database:5432/${DATABASE_NAME:?Set DATABASE_NAME in your .env file}
+      FLYWAY_USER: ${DATABASE_USER:?Set DATABASE_USER in your .env file}
+      FLYWAY_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in your .env file}
       FLYWAY_LOCATIONS: filesystem:/flyway/sql
     volumes:
       - ./InvoiceSplitter.database/migrations:/flyway/sql:ro

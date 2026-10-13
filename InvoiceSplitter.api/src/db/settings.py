@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pydantic import AliasChoices, Field, SecretStr
+from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import URL
 
@@ -14,13 +14,11 @@ class DatabaseSettings(BaseSettings):
         extra="ignore",
     )
 
-    database_host: str = "localhost"
-    database_port: int = 5432
-    database_name: str = "invoicesplitter"
-    database_user: str = "invoicesplitter"
-    database_password: SecretStr = Field(
-        validation_alias=AliasChoices("DATABASE_PASSWORD", "POSTGRES_PASSWORD")
-    )
+    database_host: str
+    database_port: int
+    database_name: str
+    database_user: str
+    database_password: SecretStr
 
     @property
     def url(self) -> URL:
